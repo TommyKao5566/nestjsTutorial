@@ -31,6 +31,16 @@ yarn global add @nestjs/cli
 yarn nest new your-project-name
 ```
 
+```
+✔ Installation in progress... ☕
+
+🚀  Successfully created project my-nestjs-project
+👉  Get started with the following commands:
+
+$ cd your-project-name
+$ yarn run start
+```
+
 ## create DB and connect and use basic sql to get data
 ## type orm, gen entities
 ## download / upload
