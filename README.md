@@ -23,23 +23,13 @@ npm i -g @nestjs/cli
 ```
 ### or
 ```
-yarn add @nestjs/cli
+yarn global add @nestjs/cli
 ```
 
-### you will see below
-![](files/public/nestjsinstall.png)
-
-### 9K+ files changed in your git
-![](files/public/9k+.png)
-
-### Normally, we will not push `/node_modules` to our respo, so we need add a `.gitignore` file in root to ignore it
-
-### add below in `.gitignore`
+### create a new proejct
 ```
-node_modules
+yarn nest new your-project-name
 ```
-![](files/public/gitignore.png)
-
 
 ## create DB and connect and use basic sql to get data
 ## type orm, gen entities
