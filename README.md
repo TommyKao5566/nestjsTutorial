@@ -50,6 +50,19 @@ getCurrentTime(): string {
 ![](files/public/getCurrentTime.png)
 
 ## create DB and connect and use basic sql to get data
+### go to https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+
+### run ![](files/public/mssql.png) `SQL2022-SSEI-Dev.exe` for install
+
+![](files/public/mssqlBasic.png)
+![](files/public/mssqlInstalling.png)
+
+### go to https://learn.microsoft.com/zh-tw/ssms/download-sql-server-management-studio-ssms#download-ssms
+
+![](files/public/downloadSsms.png)
+
+### run ![](files/public/ssms.png) `SSMS-Setup-CHT.exe` for install
+
 ## type orm, gen entities
 ## download / upload
 ## swagger
