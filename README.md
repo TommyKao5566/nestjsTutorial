@@ -34,5 +34,6 @@ npm run start:dev
 ## auth
 ## calss-validation
 ## transaction
+## email
 ## websocket
 ## third-party
