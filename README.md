@@ -8,7 +8,7 @@ npm i -g @nestjs/cli
 
 ### create a new proejct
 ```
-npm nest new your-project-name
+nest new your-project-name
 ```
 
 ```
