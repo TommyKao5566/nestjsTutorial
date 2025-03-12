@@ -186,12 +186,68 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 export class AppModule {}
 ```
 
+### create pokemonService
+`pokemon.service.ts`
+```ts
+import { Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+
+@Injectable()
+export class PokemonService {
+  constructor(private readonly dataSource: DataSource) {}
+
+  async getAllPokemon() {
+    return this.dataSource.query('SELECT * FROM pokemon');
+  }
+}
+```
+
+### create pokemonController 
+`pokemon.controller.ts`
+```ts
+import { Controller, Get } from '@nestjs/common';
+import { PokemonService } from './pokemon.service';
+
+@Controller('pokemon')
+export class PokemonController {
+  constructor(private readonly pokemonService: PokemonService) {}
+
+  @Get('list')
+  getCurrentTime() {
+    return this.pokemonService.getAllPokemon()
+  }
+}
+```
+
+### create pokemonModule
+`pokemon.module.ts`
+```ts
+import { Module } from '@nestjs/common';
+import { PokemonService } from './pokemon.service';
+import { PokemonController } from './pokemon.controller';
+
+@Module({
+  imports: [],
+  providers: [PokemonService],
+  controllers: [PokemonController],
+})
+export class PokemonModule {}
+```
+
+### add `PokemonModule` in `app.module.ts` imports
+
+### open browser connect to http://localhost:3000/pokemon/list
+
+![](files/public/getPokemonList.png)
+
+### 👍1-3. Finished!!
+
 ## type orm, gen entities
 ## download / upload
 ## swagger
 ## auth
 ## calss-validation
-## transaction
 ## email
+## transaction
 ## websocket
 ## third-party
