@@ -6,7 +6,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   port: Number(process.env.DATABASE_PORT) || 3306,
   username: process.env.DATABASE_USERNAME || 'root',
   password: process.env.DATABASE_PASSWORD || '123456',
-  database: process.env.DATABASE_NAME || 'pokemon',
+  database: process.env.DATABASE_NAME || 'mydb',
   entities: ['dist/**/output/entities/*{.ts,.js}'],
   extra: {
     connectionLimit: 10, // ✅ MariaDB 需要手動指定連線池大小
