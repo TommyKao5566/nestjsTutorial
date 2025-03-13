@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "ent-gen": "typeorm-model-generator -h localhost -d mydb -u root -x 123456 -e mariadb -o typeorm-model --noConfig true",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -27,7 +28,8 @@
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.21"
+    "typeorm": "^0.3.21",
+    "typeorm-model-generator": "^0.4.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

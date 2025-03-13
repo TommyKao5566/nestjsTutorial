@@ -187,7 +187,12 @@ export class AppModule {}
 ```
 
 ### create pokemonService
-`pokemon.service.ts`
+
+```bash
+nest g service pokemon
+```
+
+### pokemon.service.ts
 ```ts
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
@@ -203,7 +208,11 @@ export class PokemonService {
 ```
 
 ### create pokemonController 
-`pokemon.controller.ts`
+```bash
+nest g controller pokemon
+```
+
+### pokemon.controller.ts
 ```ts
 import { Controller, Get } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
@@ -220,7 +229,12 @@ export class PokemonController {
 ```
 
 ### create pokemonModule
-`pokemon.module.ts`
+
+```bash
+nest g mo pokemon
+```
+
+### pokemon.module.ts
 ```ts
 import { Module } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
@@ -242,11 +256,37 @@ export class PokemonModule {}
 
 ### 👍1-3. Finished!!
 
-## type orm, gen entities
+## 2-1.entities gen
+
+### terminal
+```bash
+npm install typeorm-model-generator
+```
+
+open `package.json` add below in `scripts`
+
+```json
+"scripts": {
+    //...
+    "ent-gen": "rm -rf typeorm-model & typeorm-model-generator -h localhost -d mydb -u root -x 123456 -e mariadb -o typeorm-model --noConfig true"
+    }
+```
+
+* `rm -rf [output folder name]` delete folder before gen
+
+### more info https://www.npmjs.com/package/typeorm-model-generator/v/0.3.1#usage
+
+### terminal
+```
+npm run ent-gen
+```
+
+
+
 ## download / upload
 ## swagger
 ## auth
-## calss-validation
+## class-validation
 ## email
 ## transaction
 ## websocket
