@@ -281,7 +281,11 @@ open `package.json` add below in `scripts`
 npm run ent-gen
 ```
 
+### ✨✨result✨✨
 
+![](files/public/entity-gen.png)
+
+### 👍2-1. Finished!!
 
 ## download / upload
 ## swagger
