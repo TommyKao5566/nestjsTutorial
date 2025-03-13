@@ -263,12 +263,14 @@ export class PokemonModule {}
 npm install typeorm-model-generator
 ```
 
-open `package.json` add below in `scripts`
+### open `package.json` add below in `scripts`
+
+### and i use `typeorm-model` as [output folder name]
 
 ```json
 "scripts": {
     //...
-    "ent-gen": "rm -rf typeorm-model & typeorm-model-generator -h localhost -d mydb -u root -x 123456 -e mariadb -o typeorm-model --noConfig true"
+    "ent-gen": "rm -rf [output folder name] & typeorm-model-generator -h localhost -d mydb -u root -x 123456 -e mariadb -o [output folder name] --noConfig true"
     }
 ```
 
@@ -284,6 +286,12 @@ npm run ent-gen
 ### ✨✨result✨✨
 
 ![](files/public/entity-gen.png)
+
+### make sure the entities path in `typeorm.config.ts` is match `[output folder name]`
+
+```ts
+entities: ['dist/**/typeorm-model/*{.ts,.js}'],
+```
 
 ### 👍2-1. Finished!!
 
