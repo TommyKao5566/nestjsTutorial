@@ -11,19 +11,19 @@ export class PokemonController {
   }
 
   // http://localhost:3000/pokemon/Pikachu
-  @Get(':name')
-  findPokemonByName(@Param('name') name: string) {
-    return this.pokemonService.findOne(name);
+  @Get(':id')
+  findPokemonByName(@Param('id') id: number) {
+    return this.pokemonService.findOne(id);
   }
   
   // http://localhost:3000/pokemon?name=Pikachu
   @Get()
-  findPokemonByQueryName(@Query('name') name?: string) {
+  findPokemonByQueryName(@Query('id') id?: number) {
 
-    if(!name) {
-        throw new BadRequestException('name required!');
+    if(!id) {
+        throw new BadRequestException('id required!');
     }
 
-    return this.pokemonService.findOne(name);
+    return this.pokemonService.findOne(id);
   }
 }
