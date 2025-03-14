@@ -71,8 +71,8 @@ export class PokemonService {
   }
 
   async create(data: Partial<Pokemon>): Promise<Pokemon> {
-    const newAnnouncement = this.pokemonRepository.create(data);
-    return await this.pokemonRepository.save(newAnnouncement);
+    const newPokemon = this.pokemonRepository.create(data);
+    return await this.pokemonRepository.save(newPokemon);
   }
 
   async update(id: number, data: Partial<Pokemon>): Promise<Pokemon | null> {
