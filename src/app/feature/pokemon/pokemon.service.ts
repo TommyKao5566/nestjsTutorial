@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, In, Repository } from 'typeorm';
+import { DataSource, DeleteResult, In, Repository, UpdateResult } from 'typeorm';
 import { Pokemon } from 'typeorm-model/Pokemon';
 
 @Injectable()
@@ -75,12 +75,13 @@ export class PokemonService {
     return await this.pokemonRepository.save(newPokemon);
   }
 
-  async update(id: number, data: Partial<Pokemon>): Promise<Pokemon | null> {
-    await this.pokemonRepository.update(id, data);
-    return this.findOne(id);
+  async update(id: number, data: Partial<Pokemon>):Promise<UpdateResult> {
+    const res = await this.pokemonRepository.update(id, data);
+    return res;
   }
 
-  async remove(id: number): Promise<void> {
-    await this.pokemonRepository.delete(id);
+  async remove(id: number): Promise<DeleteResult> {
+    const res = await this.pokemonRepository.delete(id);
+    return res
   }
 }

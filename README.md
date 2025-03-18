@@ -256,6 +256,10 @@ export class PokemonModule {}
 
 ### 👍1-3. Finished!!
 
+# Why sould we use orm?
+![](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*p6NKfjG_taXqbVpRlgP_bg.png)
+https://medium.com/@kadergenc/what-is-orm-why-is-it-used-what-are-its-pros-and-cons-3ed77c0e6ed2
+
 ## 2-1.entities gen
 
 ### terminal
@@ -295,10 +299,89 @@ entities: ['dist/**/typeorm-model/*{.ts,.js}'],
 
 ### 👍2-1. Finished!!
 
+## 2-2. Create, Read, Update, Delete (CRUD) via orm
+
+### in pokemon service, you can use find, findOne, create, remove methods in repository.
+```ts
+async find(): Promise<Pokemon[] | null> {
+    const res = await this.pokemonRepository.find();
+
+    return res;
+  }
+
+  async findOne(id: number): Promise<Pokemon | null> {
+    const res = await this.pokemonRepository.findOne({ where: { id: id } });
+
+    return res;
+  }
+
+  async create(data: Partial<Pokemon>): Promise<Pokemon> {
+    const newPokemon = this.pokemonRepository.create(data);
+    return await this.pokemonRepository.save(newPokemon);
+  }
+
+  async update(id: number, data: Partial<Pokemon>): Promise<Pokemon | null> {
+    await this.pokemonRepository.update(id, data);
+    return this.findOne(id);
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.pokemonRepository.delete(id);
+  }
+```
+
+### in pokemon controller
+```ts
+  // http://localhost:3000/pokemon/list
+  @Post('list')
+  findAllPokemon(): Promise<Pokemon[] | null> {
+    return this.pokemonService.find();
+  }
+
+  // http://localhost:3000/pokemon/create
+  @Post('create')
+  createPokemon(@Body() data: Partial<Pokemon>): Promise<Pokemon> {
+    return this.pokemonService.create(data);
+  }
+
+  // http://localhost:3000/pokemon/update
+  @Post('update')
+  updatePokemon(@Body() data: Partial<Pokemon>): Promise<UpdateResult> {
+
+    if (!data.id) {
+      throw new BadRequestException('id required!');
+    }
+
+    return this.pokemonService.update(data.id,data);
+  }
+
+  // http://localhost:3000/pokemon/delete
+  @Post('delete')
+  deletePokemon(@Body() data: Partial<Pokemon>): Promise<DeleteResult> {
+
+    if (!data.id) {
+      throw new BadRequestException('id required!');
+    }
+
+    return this.pokemonService.remove(data.id);
+  }
+```
+
+### those method is not GET, and you need to use some rest api tool (eg.postman) to test it, I will use a chrome extension `Talend API Tester - Free Edition`
+
+### go https://chromewebstore.google.com/detail/talend-api-tester-free-ed/aejoelaoggembcahagimdiliamlcdmfm
+
+![](files/public/apiTester.png)
+![](files/public/createViaOrm.png)
+
+### 👍2-2. Finished!!
+
+## 2-3. class-validation
+
+## 2-4. swagger-ui
+
 ## download / upload / virus scan / media stream
-## swagger
 ## auth
-## class-validation
 ## email
 ## transaction
 ## websocket
