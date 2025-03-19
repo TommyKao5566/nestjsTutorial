@@ -377,6 +377,8 @@ async find(): Promise<Pokemon[] | null> {
 ### 👍2-2. Finished!!
 
 ## 2-3. class-validation
+### In the previous example, we successfully created a Pokémon. But what if the request data is incorrect?
+![](files/public/createFailed.png)
 
 ## 2-4. swagger-ui
 
