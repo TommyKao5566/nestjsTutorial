@@ -10,6 +10,9 @@ import {
 import { PokemonService } from './pokemon.service';
 import { Pokemon } from 'typeorm-model/Pokemon';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { CreatePokemonRequest } from './pokemon.dto';
+import { validate } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 
 @Controller('pokemon')
 export class PokemonController {
@@ -44,7 +47,7 @@ export class PokemonController {
 
   // http://localhost:3000/pokemon/create
   @Post('create')
-  createPokemon(@Body() data: Partial<Pokemon>): Promise<Pokemon> {
+  async createPokemon(@Body() data: CreatePokemonRequest): Promise<Pokemon> {
     return this.pokemonService.create(data);
   }
 

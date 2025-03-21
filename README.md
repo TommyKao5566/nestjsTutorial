@@ -303,7 +303,7 @@ entities: ['dist/**/typeorm-model/*{.ts,.js}'],
 
 ### in pokemon service, you can use find, findOne, create, remove methods in repository.
 ```ts
-async find(): Promise<Pokemon[] | null> {
+  async find(): Promise<Pokemon[] | null> {
     const res = await this.pokemonRepository.find();
 
     return res;
@@ -338,6 +338,12 @@ async find(): Promise<Pokemon[] | null> {
     return this.pokemonService.find();
   }
 
+  // http://localhost:3000/pokemon/findOne
+  @Post('findOne')
+  findOnePokemon(@Body() data: Partial<Pokemon>): Promise<Pokemon> {
+    return this.pokemonService.findOne(data.id);
+  }
+
   // http://localhost:3000/pokemon/create
   @Post('create')
   createPokemon(@Body() data: Partial<Pokemon>): Promise<Pokemon> {
@@ -352,7 +358,7 @@ async find(): Promise<Pokemon[] | null> {
       throw new BadRequestException('id required!');
     }
 
-    return this.pokemonService.update(data.id,data);
+    return this.pokemonService.update(data.id, data);
   }
 
   // http://localhost:3000/pokemon/delete
@@ -367,6 +373,13 @@ async find(): Promise<Pokemon[] | null> {
   }
 ```
 
+| Operation      | RESTful API                   | RPC API                                             |
+|----------------|-------------------------------|-----------------------------------------------------|
+| Get Pokémon    | `GET /pokemon/{id}`           | `POST getPokemonInfo({ "pokemonId": 1 })`                |
+| Create Pokémon | `POST /pokemon`               | `POST createPokemon({ "name": "Charmander", "type": "Fire" })` |
+| Update Pokémon | `PATCH /pokemon/{id}`         | `POST updatePokemon({ "pokemonId": 1, "name": "Pikachu", "type": "Electric" })` |
+| Delete Pokémon | `DELETE /pokemon/{id}`        | `POST deletePokemon({ "pokemonId": 1 })`                 |
+
 ### those method is not GET, and you need to use some rest api tool (eg.postman) to test it, I will use a chrome extension `Talend API Tester - Free Edition`
 
 ### go https://chromewebstore.google.com/detail/talend-api-tester-free-ed/aejoelaoggembcahagimdiliamlcdmfm
@@ -379,6 +392,12 @@ async find(): Promise<Pokemon[] | null> {
 ## 2-3. class-validation
 ### In the previous example, we successfully created a Pokémon. But what if the request data is incorrect?
 ![](files/public/createFailed.png)
+
+
+
+```bash
+npm install class-validator
+```
 
 ## 2-4. swagger-ui
 
