@@ -1,9 +1,9 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
 export const dtoValidationPipe = new ValidationPipe({
-  whitelist: true, // 自動過濾掉 DTO 中沒有定義的屬性
-  // forbidNonWhitelisted: true,  // 遇到未定義的屬性時拋出錯誤
-  transform: true, // 自動將 payload 轉換為 DTO 類別（等同於 `plainToClass()`）
+  whitelist: true, // Automatically filters out properties not defined in the DTO.
+  // forbidNonWhitelisted: true, // Throws an error when encountering properties that are not defined.
+  transform: true, // Automatically transforms the payload into the DTO class (equivalent to plainToClass()).
   exceptionFactory: (errors) => {
     const validationErrors = errors.reduce(
       (acc, error) => {

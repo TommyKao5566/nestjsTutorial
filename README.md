@@ -1,12 +1,15 @@
 # Nestjs Tutorial
 
 ## 1-1. create a new nest project
+
 ### use below command to install nestjs
+
 ```
 npm i -g @nestjs/cli
 ```
 
 ### create a new proejct
+
 ```
 nest new your-project-name
 ```
@@ -19,15 +22,18 @@ nest new your-project-name
 ```
 
 ### in `terminal`
+
 ```
 cd your-project-name
 npm run start:dev
 ```
 
 ### in browser open `localhost:3000`, if you see below means the server is running
+
 ![](files/public/startOK.png)
 
 ### open `src\app.service.ts`
+
 ### add function getCurrentTime in AppService
 
 ```ts
@@ -37,23 +43,26 @@ getCurrentTime(): string {
 ```
 
 ### open `src\app.controller.ts`
+
 ### add function getCurrentTime AppController
+
 ```ts
   //@Get means use get method in restful api, there are other method: post, put ...etc, the string 'getCurrentTime' is the path
-  @Get('getCurrentTime') 
+  @Get('getCurrentTime')
   getCurrentTime(): string {
     return this.appService.getCurrentTime();
   }
 ```
 
 ### result
+
 ![](files/public/getCurrentTime.png)
 
 ### 👍1-1. Finished!!
 
 ## 1-2. create DB and table
 
-<!-- 
+<!--
 ## download MS SQL server
 
 ### go to https://www.microsoft.com/en-us/sql-server/sql-server-downloads
@@ -97,6 +106,7 @@ getCurrentTime(): string {
 ## download DBeaver (db tools) in https://dbeaver.io/download/
 
 ### in DBeaver press `F3` to open new SQL script
+
 `run`: ctrl + enter
 
 `comment`: ctrl + /
@@ -130,7 +140,7 @@ CREATE TABLE pokemon (
 
 ```sql
 INSERT INTO pokemon (name, type1, type2, hp, attack, defense, special_attack, special_defense, speed)
-VALUES 
+VALUES
     ('Pikachu', 'Electric', NULL, 35, 55, 40, 50, 50, 90),
     ('Charizard', 'Fire', 'Flying', 78, 84, 78, 109, 85, 100),
     ('Bulbasaur', 'Grass', 'Poison', 45, 49, 49, 65, 65, 45),
@@ -148,11 +158,13 @@ SELECT * from pokemon
 ## 1-3. connect DB in nestjs
 
 ### install bewlow
+
 ```
 npm install @nestjs/typeorm typeorm mysql
 ```
 
 ### create typeorm.config.ts
+
 ```ts
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
@@ -165,12 +177,13 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: process.env.DATABASE_NAME || 'mydb',
   entities: ['dist/**/typeorm-model/*{.ts,.js}'],
   extra: {
-    connectionLimit: 10
+    connectionLimit: 10,
   },
 };
 ```
 
-### open src\app.module.ts, add TypeOrmModule in imports 
+### open src\app.module.ts, add TypeOrmModule in imports
+
 ```ts
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -179,7 +192,7 @@ import { typeOrmConfig } from './app/base/typeorm/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig),],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig)],
   controllers: [AppController],
   providers: [AppService],
 })
@@ -193,6 +206,7 @@ nest g service pokemon
 ```
 
 ### pokemon.service.ts
+
 ```ts
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
@@ -207,12 +221,14 @@ export class PokemonService {
 }
 ```
 
-### create pokemonController 
+### create pokemonController
+
 ```bash
 nest g controller pokemon
 ```
 
 ### pokemon.controller.ts
+
 ```ts
 import { Controller, Get } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
@@ -223,7 +239,7 @@ export class PokemonController {
 
   @Get('list')
   getAllPokemon() {
-    return this.pokemonService.getAllPokemon()
+    return this.pokemonService.getAllPokemon();
   }
 }
 ```
@@ -235,6 +251,7 @@ nest g mo pokemon
 ```
 
 ### pokemon.module.ts
+
 ```ts
 import { Module } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
@@ -257,12 +274,14 @@ export class PokemonModule {}
 ### 👍1-3. Finished!!
 
 # Why sould we use orm?
+
 ![](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*p6NKfjG_taXqbVpRlgP_bg.png)
 https://medium.com/@kadergenc/what-is-orm-why-is-it-used-what-are-its-pros-and-cons-3ed77c0e6ed2
 
 ## 2-1.entities gen
 
 ### terminal
+
 ```bash
 npm install typeorm-model-generator
 ```
@@ -278,11 +297,12 @@ npm install typeorm-model-generator
     }
 ```
 
-* `rm -rf [output folder name]` delete folder before gen
+- `rm -rf [output folder name]` delete folder before gen
 
 ### more info https://www.npmjs.com/package/typeorm-model-generator/v/0.3.1#usage
 
 ### terminal
+
 ```
 npm run ent-gen
 ```
@@ -302,6 +322,7 @@ entities: ['dist/**/typeorm-model/*{.ts,.js}'],
 ## 2-2. Create, Read, Update, Delete (CRUD) via orm
 
 ### in pokemon service, you can use find, findOne, create, remove methods in repository.
+
 ```ts
   async find(): Promise<Pokemon[] | null> {
     const res = await this.pokemonRepository.find();
@@ -331,6 +352,7 @@ entities: ['dist/**/typeorm-model/*{.ts,.js}'],
 ```
 
 ### in pokemon controller
+
 ```ts
   // http://localhost:3000/pokemon/list
   @Post('list')
@@ -373,12 +395,12 @@ entities: ['dist/**/typeorm-model/*{.ts,.js}'],
   }
 ```
 
-| Operation      | RESTful API                   | RPC API                                             |
-|----------------|-------------------------------|-----------------------------------------------------|
-| Get Pokémon    | `GET /pokemon/{id}`           | `POST getPokemonInfo({ "pokemonId": 1 })`                |
-| Create Pokémon | `POST /pokemon`               | `POST createPokemon({ "name": "Charmander", "type": "Fire" })` |
-| Update Pokémon | `PATCH /pokemon/{id}`         | `POST updatePokemon({ "pokemonId": 1, "name": "Pikachu", "type": "Electric" })` |
-| Delete Pokémon | `DELETE /pokemon/{id}`        | `POST deletePokemon({ "pokemonId": 1 })`                 |
+| Operation      | RESTful API            | RPC API                                                                         |
+| -------------- | ---------------------- | ------------------------------------------------------------------------------- |
+| Get Pokémon    | `GET /pokemon/{id}`    | `POST getPokemonInfo({ "pokemonId": 1 })`                                       |
+| Create Pokémon | `POST /pokemon`        | `POST createPokemon({ "name": "Charmander", "type": "Fire" })`                  |
+| Update Pokémon | `PATCH /pokemon/{id}`  | `POST updatePokemon({ "pokemonId": 1, "name": "Pikachu", "type": "Electric" })` |
+| Delete Pokémon | `DELETE /pokemon/{id}` | `POST deletePokemon({ "pokemonId": 1 })`                                        |
 
 ### those method is not GET, and you need to use some rest api tool (eg.postman) to test it, I will use a chrome extension `Talend API Tester - Free Edition`
 
@@ -390,20 +412,270 @@ entities: ['dist/**/typeorm-model/*{.ts,.js}'],
 ### 👍2-2. Finished!!
 
 ## 2-3. class-validation
+
 ### In the previous example, we successfully created a Pokémon. But what if the request data is incorrect?
+
 ![](files/public/createFailed.png)
 
-
+### We send this invalid data to the backend, and the backend directly passes it to the database without any handling, which results in the errors shown below in the console.
 
 ```bash
-npm install class-validator
+  code: 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD',
+  sqlMessage: "Incorrect integer value: 'infinity' for column `mydb`.`pokemon`.`attack` at row 1",
 ```
+
+### The database rejects your invalid data, but the database is a critical resource, meaning the data should be rejected before it reaches the database. For basic validation, we can implement this in our DTO.
+
+```plaintext
+Frontend
+   │
+   ▼
+  DTO  ←→  Basic Validation
+   │
+   ▼
+Controller
+   │
+   ▼
+Service ←→ Business Logic Validation
+   │
+   ▼
+Repository
+   │
+   ▼
+Entity
+   │
+   ▼
+Database
+```
+
+```bash
+npm install class-validator class-transformer
+```
+
+### create /base/validation/validation.pipe.ts
+
+```ts
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
+
+export const dtoValidationPipe = new ValidationPipe({
+  whitelist: true, // Automatically filters out properties not defined in the DTO.
+  // forbidNonWhitelisted: true, // Throws an error when encountering properties that are not defined.
+  transform: true, // Automatically transforms the payload into the DTO class (equivalent to plainToClass()).
+  exceptionFactory: (errors) => {
+    const validationErrors = errors.reduce(
+      (acc, error) => {
+        acc[error.property] = Object.values(error.constraints || {});
+        return acc;
+      },
+      {} as Record<string, string[]>,
+    );
+
+    return new BadRequestException({
+      statusCode: 400,
+      message: 'Validation failed',
+      validationErrors,
+    });
+  },
+});
+```
+
+### apply it in main.ts
+
+```ts
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { dtoValidationPipe } from './app/base/validation/validation.pipe';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  // HERE
+  app.useGlobalPipes(dtoValidationPipe);
+
+  await app.listen(process.env.PORT ?? 3000);
+}
+bootstrap();
+```
+
+### create pokemon.dto.ts
+
+```ts
+import { IsInt, IsNotEmpty, IsPositive, IsString, Min } from 'class-validator';
+
+const MIN_ATTACK = 0;
+
+export class CreatePokemonRequest {
+  @IsString({ message: 'Must be a string' })
+  name: string;
+
+  @IsNotEmpty()
+  @IsString({ message: 'Must be a string' })
+  type1: string;
+
+  @IsString({ message: 'Must be a string' })
+  type2: string | null;
+
+  @IsInt({ message: 'Must be an integer' })
+  @IsPositive({ message: 'Must be a positive number (> 0)' })
+  hp: number;
+
+  @Min(MIN_ATTACK, { message: `Must be ≥ ${MIN_ATTACK}` })
+  @IsInt()
+  attack: number;
+
+  @IsInt()
+  defense: number;
+
+  @IsInt()
+  specialAttack: number;
+
+  @IsInt()
+  specialDefense: number;
+
+  @IsInt()
+  speed: number;
+}
+```
+
+### open pokemon.controller.ts, apply CreatePokemonRequest
+
+```ts
+  // http://localhost:3000/pokemon/create
+  @Post('create')
+  async createPokemon(@Body() data: CreatePokemonRequest): Promise<Pokemon> {
+    return this.pokemonService.create(data);
+  }
+```
+
+### Test again, the API responds below, and it works!!
+
+```json
+{
+  "statusCode": 400,
+  "message": "Validation failed",
+  "validationErrors": {
+    "type1": ["Must be a string", "type1 should not be empty"],
+    "type2": ["Must be a string"],
+    "hp": ["Must be a positive number (> 0)", "Must be an integer"],
+    "attack": ["attack must be an integer number", "Must be ≥ 0"],
+    "defense": ["defense must be an integer number"],
+    "specialAttack": ["specialAttack must be an integer number"],
+    "specialDefense": ["specialDefense must be an integer number"],
+    "speed": ["speed must be an integer number"]
+  }
+}
+```
+### class-validator provides many validation decorators, below are some common categories and corresponding decorators:
+
+```ts
+
+📌 Common Basic Validations
+Decorator    Function
+@IsString()  Must be a string
+@IsInt()     Must be an integer
+@IsBoolean() Must be a boolean
+@IsNumber()  Must be a number (can be a decimal)
+@IsOptional() Allows the field to be undefined or null (no further validation)
+@IsNotEmpty() Cannot be empty ("" , null , undefined)
+@IsDefined() Must exist (cannot be undefined)
+
+📌 Numeric Validations
+Decorator    Function
+@IsPositive() Must be a positive number
+@IsNegative() Must be a negative number
+@Min(value)  Must be >= value
+@Max(value)  Must be <= value
+
+📌 String Length Validations
+Decorator      Function
+@MinLength(value)  Minimum length of string
+@MaxLength(value)  Maximum length of string
+
+📌 Boolean Validations
+Decorator    Function
+@IsBoolean() Must be true or false
+
+📌 Date Validations
+Decorator     Function
+@IsDate()     Must be a Date type
+@MinDate(date) Must be >= date
+@MaxDate(date) Must be <= date
+
+📌 Array Validations
+Decorator       Function
+@IsArray()      Must be an array
+@ArrayMinSize(value) Minimum length of array
+@ArrayMaxSize(value) Maximum length of array
+@ArrayNotEmpty() Array cannot be empty
+@ArrayUnique()  Values in array must be unique
+
+📌 Email & URL Validations
+Decorator    Function
+@IsEmail()   Must be in Email format
+@IsUrl()     Must be in URL format
+@IsFQDN()    Must be a Fully Qualified Domain Name
+@IsIP(version?) Must be an IP address (can specify version 4 or 6)
+
+📌 Other Format Validations
+Decorator        Function
+@IsUUID(version?) Must be a UUID (can specify version 1, 3, 4, 5)
+@IsCreditCard()  Must be a credit card number
+@IsHexColor()    Must be a Hex color code
+@IsMACAddress()  Must be a MAC address
+@IsPostalCode(locale?) Must be a postal code
+@IsPhoneNumber(region?) Must be a phone number
+
+📌 Custom Validations
+Decorator           Function
+@Matches(regex)     Must match the regular expression
+@Validate(CustomValidator) Uses custom validation logic
+
+📌 Example (using regular expression to validate password)
+
+ts
+import { Matches } from 'class-validator';
+
+class UserDto {
+  @Matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)
+  password: string;
+}
+
+📌 Example (using custom validation)
+
+ts
+import { ValidatorConstraint, ValidatorConstraintInterface, Validate } from 'class-validator';
+
+// Custom validation logic
+@ValidatorConstraint({ async: false })
+export class IsUsernameUnique implements ValidatorConstraintInterface {
+  validate(username: string) {
+    return username !== 'admin'; // Assume admin cannot be used
+  }
+
+  defaultMessage() {
+    return 'Username is already taken!';
+  }
+}
+
+// Using custom validation
+class UserDto {
+  @Validate(IsUsernameUnique)
+  username: string;
+}
+```
+
+### 👍2-3. Finished!!
 
 ## 2-4. swagger-ui
 
 ## download / upload / virus scan / media stream
+
 ## auth
+
 ## email
+
 ## transaction
+
 ## websocket
+
 ## third-party
