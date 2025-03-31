@@ -47,7 +47,9 @@ getCurrentTime(): string {
 ### add function getCurrentTime AppController
 
 ```ts
-  //@Get means use get method in restful api, there are other method: post, put ...etc, the string 'getCurrentTime' is the path
+  //@Get means use GET method
+  //(there are other method: POST, PATCH, PUT, DELETE, OPTIONS, OPTIONS, HEAD, TRACE, CONNECT in http/1.1
+  //the string 'getCurrentTime' is the path
   @Get('getCurrentTime')
   getCurrentTime(): string {
     return this.appService.getCurrentTime();
