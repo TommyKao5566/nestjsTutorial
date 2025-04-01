@@ -668,7 +668,114 @@ class UserDto {
 
 ### 👍2-3. Finished!!
 
-## 2-4. swagger-ui
+## 2-4. Automatically add class-validator based on TypeORM rules
+
+### In `[2-1.entities gen]`, we generated entities automatically. Logically, our validation should not conflict with the rules in the entity, so we can definitely clone the rules from it.
+
+```ts
+@Entity("pokemon", { schema: "mydb" })
+export class Pokemon {
+  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+  id: number;
+
+  @Column("varchar", { name: "name", length: 50 })
+  name: string;
+
+  @Column("varchar", { name: "type1", length: 20 })
+  type1: string;
+
+  ...
+
+  @Column("timestamp", {
+    name: "created_at",
+    nullable: true,
+    default: () => "CURRENT_TIMESTAMP",
+  })
+  createdAt: Date | null;
+}
+```
+
+
+
+### create validate-from-entity.decorators
+```ts
+import {
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import { getMetadataArgsStorage } from 'typeorm';
+
+export function ValidateFromEntity(entity: Function, property?: string) {
+  return function (target: any, key: string) {
+    const columnName = property ?? key; // 👉 If no second parameter is provided, it defaults to the property name
+
+    const columns = getMetadataArgsStorage().columns.filter(
+      (col) => col.target === entity && col.propertyName === columnName,
+    );
+
+    if (columns.length === 0) return; // If no matching column is found, return immediately
+
+    const options = columns[0].options;
+    const decorators: PropertyDecorator[] = [];
+
+    // 🔹 Automatically add class-validator validation based on TypeORM rules
+    if (options.length !== undefined)
+      decorators.push(MaxLength(+options.length));
+    if (options.nullable) decorators.push(IsOptional());
+    else decorators.push(IsNotEmpty());
+    if (options.type === 'varchar') decorators.push(IsString());
+    if (options.type === 'int') decorators.push(IsInt());
+    if (options.unique) decorators.push(IsNotEmpty());
+    if (columnName.includes('email')) decorators.push(IsEmail());
+
+    // 🚀 Correctly apply the decorators
+    Reflect.decorate(decorators, target, key);
+  };
+}
+```
+
+### in dto
+```ts
+  import { ValidateFromEntity } from 'src/app/base/validation/validate-from-entity.decorators';
+```
+
+### original
+```ts
+  @IsInt({ message:"Must be an integer" })
+  @IsPositive({ message:"Must be a positive number (> 0)" })
+  hp: number;
+```
+
+### remove ~~~@IsInt({ message:"Must be an integer" })~~~ & ~~~@IsPositive({ message:"Must be a positive number (> 0)" })~~~, and add `@ValidateFromEntity(Users)`
+
+### result
+```ts
+  @ValidateFromEntity(Pokemon)
+  hp: number;
+```
+
+### If you have validation rules that are not based on the entity, just add them. Don't worry if the rule `conflicts` with the entity; `class-validator` will follow all the rules.
+
+## Example 
+
+```ts
+  @Column("varchar", { name: "name", length: 50 })
+  name: string;
+```
+
+The `entity`'s maximum length is 50, but you need it to be 30 in the `DTO`. Just add @MaxLength(30) as shown before. The concept is that the value must pass all the rules (maxLength 30 && maxLength 50).
+
+```ts
+  @ValidateFromEntity(Pokemon) //maxlength: 50
+  @MaxLength(30)
+  name: string;
+```
+
+## 2-5. swagger-ui
 
 ## download / upload / virus scan / media stream
 

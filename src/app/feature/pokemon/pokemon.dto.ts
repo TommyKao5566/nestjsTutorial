@@ -1,39 +1,34 @@
-import { IsInt, IsNotEmpty, IsPositive, IsString, Min } from 'class-validator';
-
-const MIN_ATTACK = 0
+import { ValidateFromEntity } from 'src/app/base/validation/validate-from-entity.decorators';
+import { Pokemon } from 'typeorm-model/Pokemon';
 
 export class CreatePokemonRequest {
 
-  @IsString({ message:'Must be a string' })
+  @ValidateFromEntity(Pokemon)
   name: string;
 
-  @IsNotEmpty()
-  @IsString({ message:'Must be a string' })
+  @ValidateFromEntity(Pokemon)
   type1: string;
-
-  @IsString({ message:'Must be a string' })
+  
+  @ValidateFromEntity(Pokemon)
   type2: string | null;
-
-  @IsInt({ message:"Must be an integer" })
-  @IsPositive({ message:"Must be a positive number (> 0)" })
+  
+  @ValidateFromEntity(Pokemon)
   hp: number;
-
-  @Min( MIN_ATTACK, {message:`Must be ≥ ${MIN_ATTACK}` })	
-  @IsInt()
+  
+  @ValidateFromEntity(Pokemon)
   attack: number;
 
-  @IsInt()
+  @ValidateFromEntity(Pokemon)
   defense: number;
 
-  @IsInt()
+  @ValidateFromEntity(Pokemon)
   specialAttack: number;
 
-  @IsInt()
+  @ValidateFromEntity(Pokemon)
   specialDefense: number;
 
-  @IsInt()
+  @ValidateFromEntity(Pokemon)
   speed: number;
-
 }
 
 /* class-validator
