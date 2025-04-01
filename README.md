@@ -777,6 +777,49 @@ The `entity`'s maximum length is 50, but you need it to be 30 in the `DTO`. Just
 
 ## 2-5. swagger-ui
 
+```bash
+npm install @nestjs/swagger
+```
+
+### create config.ts file
+```ts
+import { INestApplication } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+
+export function setupSwagger(app: INestApplication) {
+
+  const config = new DocumentBuilder()
+    .setTitle('Pokemon API')
+    .setDescription(
+      '- ### This is Pokemon API        \n- ### [swagger.json](/swagger/swagger.json)        \n- ### Have Fun!!🚀',
+    )
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger-ui', app, document); // Swagger UI route path
+
+}
+```
+
+### open main.ts, add `setupSwagger(app)` before `await app.listen(process.env.PORT ?? 3000);`
+
+```ts
+  ...
+
+  setupSwagger(app)
+
+  await app.listen(process.env.PORT ?? 3000);
+```
+
+### open http://localhost:3000/swagger-ui
+
+![](files/public/swagger-ui.png)
+
+### 👍2-5. Finished!!
+
 ## download / upload / virus scan / media stream
 
 ## auth
