@@ -750,7 +750,7 @@ export function ValidateFromEntity(entity: Function, property?: string) {
   hp: number;
 ```
 
-### remove ~~~@IsInt({ message:"Must be an integer" })~~~ & ~~~@IsPositive({ message:"Must be a positive number (> 0)" })~~~, and add `@ValidateFromEntity(Users)`
+### remove ~~@IsInt({ message:"Must be an integer" })~~ & ~~@IsPositive({ message:"Must be a positive number (> 0)" })~~, and add `@ValidateFromEntity(Users)`
 
 ### result
 ```ts
