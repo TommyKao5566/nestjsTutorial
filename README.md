@@ -820,6 +820,29 @@ export function setupSwagger(app: INestApplication) {
 
 ### 👍2-5. Finished!!
 
+## 3-1. create users table and regist api
+
+```sql
+CREATE TABLE users (
+  id INT NOT NULL AUTO_INCREMENT,
+  email VARCHAR(255) NOT NULL,
+  username VARCHAR(100) NOT NULL,
+  password VARCHAR(255) DEFAULT NULL,
+  status VARCHAR(10) DEFAULT 'inactive',
+  role ENUM('admin', 'user', 'guest') NOT NULL DEFAULT 'user',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  password_updated_at DATETIME DEFAULT NULL,
+  refresh_token VARCHAR(255) DEFAULT NULL,
+  ip VARCHAR(45) DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY email (email)
+)
+```
+
+### gen entity
+
+
 ## download / upload / virus scan / media stream
 
 ## auth
