@@ -15,9 +15,6 @@ export class CreateUserRequest {
   @ValidateFromEntity(Users)
   refresh_token: string;
 
-  @ValidateFromEntity(Users)
-  ip: string;
-
 }
 
 /* class-validator

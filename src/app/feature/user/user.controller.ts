@@ -26,10 +26,10 @@ export class UserController {
     return this.userService.find();
   }
 
-  // http://localhost:3000/user/create
-  @Post('create')
+  // http://localhost:3000/user/register
+  @Post('register')
   async createUser(@Body() data: CreateUserRequest): Promise<Users> {
-    return this.userService.create(data);
+    return this.userService.register(data);
   }
 
   // http://localhost:3000/user/update
