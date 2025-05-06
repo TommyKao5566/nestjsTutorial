@@ -12,9 +12,6 @@ export class RegisterRequest {
   @ValidateFromEntity(Users)
   password: string;
   
-  @ValidateFromEntity(Users)
-  refresh_token: string;
-
 }
 
 /* class-validator

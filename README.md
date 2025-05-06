@@ -842,6 +842,62 @@ CREATE TABLE users (
 
 ### gen entity
 
+### create users.dto.ts
+
+```ts
+import { ValidateFromEntity } from 'src/app/base/validation/validate-from-entity.decorators';
+import { Users } from 'typeorm-model/Users';
+
+export class RegisterRequest {
+
+  @ValidateFromEntity(Users)
+  email: string;
+
+  @ValidateFromEntity(Users)
+  username: string;
+  
+  @ValidateFromEntity(Users)
+  password: string;
+
+}
+```
+
+### create users.service.ts
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Users } from 'typeorm-model/Users';
+import * as bcrypt from 'bcrypt';
+
+const SALT_ROUNDS = 10;
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(Users)
+    private readonly usersRepository: Repository<Users>,
+  ) {}
+
+  async register(data: Partial<Users>):Promise<Users> {
+
+    // Force apply DB defaults: status = 'inactive', role = 'user'
+    // We'll manually activate the account later directly in the DB
+    delete data.status;
+    delete data.role;
+
+    // Securely hash the plain password using bcrypt to prevent storing raw passwords in the database
+    const hashedPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
+
+    data.password = hashedPassword;
+
+    const newData = this.usersRepository.create(data);
+    return await this.usersRepository.save(newData);
+  }
+}
+```
+
 ### create users.controller.ts
 
 ```ts
@@ -851,22 +907,41 @@ import {
   Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserRequest } from './users.dto';
+import { RegisterRequest } from './users.dto';
 import { Users } from 'typeorm-model/Users';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  // http://localhost:3000/users/register
+  // http://localhost:3000/user/register
   @Post('register')
-  async createUser(@Body() data: CreateUserRequest): Promise<Users> {
-    return this.userService.register(data);
+  async register(@Body() data: RegisterRequest): Promise<Users> {
+    return this.usersService.register(data);
   }
 }
 ```
 
-### create users.service.ts
+### create users.module.ts
+
+```ts
+import { Module } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Users } from 'typeorm-model/Users';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Users])],
+  providers: [UsersService],
+  controllers: [UsersController],
+})
+export class UsersModule {}
+```
+
+### append UsersModule in imports of app.module.ts
+
+
 
 ## download / upload / virus scan / media stream
 
