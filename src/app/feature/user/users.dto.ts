@@ -1,7 +1,7 @@
 import { ValidateFromEntity } from 'src/app/base/validation/validate-from-entity.decorators';
 import { Users } from 'typeorm-model/Users';
 
-export class CreateUserRequest {
+export class RegisterRequest {
 
   @ValidateFromEntity(Users)
   email: string;

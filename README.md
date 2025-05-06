@@ -842,6 +842,31 @@ CREATE TABLE users (
 
 ### gen entity
 
+### create users.controller.ts
+
+```ts
+import {
+  Body,
+  Controller,
+  Post,
+} from '@nestjs/common';
+import { UsersService } from './users.service';
+import { CreateUserRequest } from './users.dto';
+import { Users } from 'typeorm-model/Users';
+
+@Controller('users')
+export class UsersController {
+  constructor(private readonly userService: UserService) {}
+
+  // http://localhost:3000/users/register
+  @Post('register')
+  async createUser(@Body() data: CreateUserRequest): Promise<Users> {
+    return this.userService.register(data);
+  }
+}
+```
+
+### create users.service.ts
 
 ## download / upload / virus scan / media stream
 
