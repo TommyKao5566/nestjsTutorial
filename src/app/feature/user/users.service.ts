@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 const SALT_ROUNDS = 10;
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
