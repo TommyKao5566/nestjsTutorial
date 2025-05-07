@@ -819,11 +819,12 @@ export function setupSwagger(app: INestApplication) {
 
 ## 2-6. Add basePath and download link of openapi.json
 
-### edit main.ts, add `app.setGlobalPrefix('webapi')`, Please call setGlobalPrefix as early as possible, otherwise some functions might not recognize the prefix.
+### edit main.ts, add `app.setGlobalPrefix('webapi')`
 
 ```ts
   const app = await NestFactory.create(AppModule);
 
+  // Please call setGlobalPrefix as early as possible, otherwise some functions might not recognize the prefix.
   app.setGlobalPrefix('webapi');
 ```
 
