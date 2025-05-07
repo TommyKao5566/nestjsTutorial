@@ -16,7 +16,7 @@ export function setupSwagger(app: INestApplication) {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger-ui', app, document); // Swagger UI route path
 
-  // // **generate Swagger JSON as static file**
-  // const swaggerJsonPath = join(process.cwd(), 'swagger.json');
-  // writeFileSync(swaggerJsonPath, JSON.stringify(document, null, 2));
+  // **generate Swagger JSON as static file**
+  const swaggerJsonPath = join(process.cwd(), 'swagger.json');
+  writeFileSync(swaggerJsonPath, JSON.stringify(document, null, 2));
 }

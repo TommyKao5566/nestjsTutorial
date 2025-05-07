@@ -1,0 +1,201 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/webapi": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/webapi/getCurrentTime": {
+      "get": {
+        "operationId": "AppController_getCurrentTime",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/webapi/pokemon/list": {
+      "get": {
+        "operationId": "PokemonController_getAllPokemon",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Pokemon"
+        ]
+      },
+      "post": {
+        "operationId": "PokemonController_findAllPokemon",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Pokemon"
+        ]
+      }
+    },
+    "/webapi/pokemon": {
+      "get": {
+        "operationId": "PokemonController_findPokemonByQueryId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Pokemon"
+        ]
+      }
+    },
+    "/webapi/pokemon/findOne/{pokemon_id}": {
+      "post": {
+        "operationId": "PokemonController_findPokemonById",
+        "parameters": [
+          {
+            "name": "pokemon_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Pokemon"
+        ]
+      }
+    },
+    "/webapi/pokemon/create": {
+      "post": {
+        "operationId": "PokemonController_createPokemon",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePokemonRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Pokemon"
+        ]
+      }
+    },
+    "/webapi/pokemon/update": {
+      "post": {
+        "operationId": "PokemonController_updatePokemon",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Pokemon"
+        ]
+      }
+    },
+    "/webapi/pokemon/delete": {
+      "post": {
+        "operationId": "PokemonController_deletePokemon",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Pokemon"
+        ]
+      }
+    },
+    "/webapi/users/register": {
+      "post": {
+        "operationId": "UsersController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Pokemon API",
+    "description": "- ### This is Pokemon API        \n- ### [swagger.json](/swagger/swagger.json)         \n- ### Have Fun!!🚀",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreatePokemonRequest": {
+        "type": "object",
+        "properties": {}
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}

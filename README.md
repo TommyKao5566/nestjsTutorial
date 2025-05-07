@@ -792,9 +792,6 @@ export function setupSwagger(app: INestApplication) {
 
   const config = new DocumentBuilder()
     .setTitle('Pokemon API')
-    .setDescription(
-      '- ### This is Pokemon API        \n- ### [swagger.json](/swagger/swagger.json)        \n- ### Have Fun!!🚀',
-    )
     .setVersion('1.0')
     .build();
 
@@ -819,6 +816,44 @@ export function setupSwagger(app: INestApplication) {
 ![](files/public/swagger-ui.png)
 
 ### 👍2-5. Finished!!
+
+## 2-6. Add basePath and download link of openapi.json
+
+### edit main.ts, add `app.setGlobalPrefix('webapi')`, Please call setGlobalPrefix as early as possible, otherwise some functions might not recognize the prefix.
+
+```ts
+  const app = await NestFactory.create(AppModule);
+
+  app.setGlobalPrefix('webapi');
+```
+
+### edit config.ts file, add `setDescription(markdown string)`, and generate the static openapi.json file.
+```ts
+
+export function setupSwagger(app: INestApplication) {
+
+  const config = new DocumentBuilder()
+    .setTitle('Pokemon API')
+    //↓↓↓↓↓↓↓↓↓↓↓
+    // add download link
+    .setDescription(
+      '- ### This is Pokemon API        \n- ### [swagger.json](/swagger/swagger.json)        \n- ### Have Fun!!🚀',
+    )
+    //↑↑↑↑↑↑↑↑↑↑↑
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger-ui', app, document); // Swagger UI route path
+
+  //↓↓↓↓↓↓↓↓↓↓↓
+  // **generate Swagger JSON as static file**
+  const swaggerJsonPath = join(process.cwd(), 'swagger.json');
+  writeFileSync(swaggerJsonPath, JSON.stringify(document, null, 2));
+  //↑↑↑↑↑↑↑↑↑↑↑
+
+}
+```
 
 ## 3-1. create users table and regist api
 
