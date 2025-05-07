@@ -838,23 +838,33 @@ export function setupSwagger(app: INestApplication) {
     //↓↓↓↓↓↓↓↓↓↓↓
     // add download link
     .setDescription(
-      '- ### This is Pokemon API        \n- ### [swagger.json](/swagger/swagger.json)        \n- ### Have Fun!!🚀',
+      '- ### This is Pokemon API        \n- ### [swagger.json](/swagger.json)        \n- ### Have Fun!!🚀',
     )
     //↑↑↑↑↑↑↑↑↑↑↑
     .setVersion('1.0')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger-ui', app, document); // Swagger UI route path
+  ...
 
-  //↓↓↓↓↓↓↓↓↓↓↓
-  // **generate Swagger JSON as static file**
+  // generate Swagger JSON as static file
   const swaggerJsonPath = join(process.cwd(), 'swagger.json');
   writeFileSync(swaggerJsonPath, JSON.stringify(document, null, 2));
-  //↑↑↑↑↑↑↑↑↑↑↑
 
+  // Expose the raw OpenAPI JSON file at /swagger.json
+  // This allows tools or users to fetch the spec directly (e.g. Swagger UI, Postman)
+  app.getHttpAdapter().get('/swagger.json', (req, res) => {
+    res.sendFile(swaggerJsonPath);
+  });
 }
 ```
+
+### go http://localhost:3000/swagger.json check this json
+
+![](files/public/swagger.json.png)
+
+### 👍2-6. Finished!!
+
+## 2-7. add global 
 
 ## 3-1. create users table and regist api
 
