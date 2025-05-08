@@ -1,32 +1,42 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { ValidateFromEntity } from 'src/app/base/validation/validate-from-entity.decorators';
 import { Pokemon } from 'typeorm-model/Pokemon';
 
 export class CreatePokemonRequest {
 
+  @ApiProperty({ example: 'super monster', description: 'pokemon name' })
   @ValidateFromEntity(Pokemon)
   name: string;
 
+  @ApiProperty({ example: 'super', description: '' })
   @ValidateFromEntity(Pokemon)
   type1: string;
   
+  @ApiProperty({ example: '', description: '' })
   @ValidateFromEntity(Pokemon)
   type2: string | null;
   
+  @ApiProperty({ example: 999, description: '' })
   @ValidateFromEntity(Pokemon)
   hp: number;
   
+  @ApiProperty({ example: 999, description: '' })
   @ValidateFromEntity(Pokemon)
   attack: number;
 
+  @ApiProperty({ example: 999, description: '' })
   @ValidateFromEntity(Pokemon)
   defense: number;
 
+  @ApiProperty({ example: 999, description: '' })
   @ValidateFromEntity(Pokemon)
   specialAttack: number;
 
+  @ApiProperty({ example: 999, description: '' })
   @ValidateFromEntity(Pokemon)
   specialDefense: number;
 
+  @ApiProperty({ example: 999, description: '' })
   @ValidateFromEntity(Pokemon)
   speed: number;
 }

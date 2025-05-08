@@ -1,14 +1,18 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { ValidateFromEntity } from 'src/app/base/validation/validate-from-entity.decorators';
 import { Users } from 'typeorm-model/Users';
 
 export class RegisterRequest {
 
+  @ApiProperty({ example: 'example@example.com', description: 'email' })
   @ValidateFromEntity(Users)
   email: string;
 
+  @ApiProperty({ example: 'username', description: 'username' })
   @ValidateFromEntity(Users)
   username: string;
   
+  @ApiProperty({ example: 'password', description: 'password' })
   @ValidateFromEntity(Users)
   password: string;
   

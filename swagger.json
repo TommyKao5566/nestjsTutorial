@@ -190,11 +190,89 @@
     "schemas": {
       "CreatePokemonRequest": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "super monster",
+            "description": "pokemon name"
+          },
+          "type1": {
+            "type": "string",
+            "example": "super",
+            "description": ""
+          },
+          "type2": {
+            "type": "object",
+            "example": "",
+            "description": ""
+          },
+          "hp": {
+            "type": "number",
+            "example": 999,
+            "description": ""
+          },
+          "attack": {
+            "type": "number",
+            "example": 999,
+            "description": ""
+          },
+          "defense": {
+            "type": "number",
+            "example": 999,
+            "description": ""
+          },
+          "specialAttack": {
+            "type": "number",
+            "example": 999,
+            "description": ""
+          },
+          "specialDefense": {
+            "type": "number",
+            "example": 999,
+            "description": ""
+          },
+          "speed": {
+            "type": "number",
+            "example": 999,
+            "description": ""
+          }
+        },
+        "required": [
+          "name",
+          "type1",
+          "type2",
+          "hp",
+          "attack",
+          "defense",
+          "specialAttack",
+          "specialDefense",
+          "speed"
+        ]
       },
       "RegisterRequest": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "email"
+          },
+          "username": {
+            "type": "string",
+            "example": "username",
+            "description": "username"
+          },
+          "password": {
+            "type": "string",
+            "example": "password",
+            "description": "password"
+          }
+        },
+        "required": [
+          "email",
+          "username",
+          "password"
+        ]
       }
     }
   }

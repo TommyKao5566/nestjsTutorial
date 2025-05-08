@@ -815,7 +815,36 @@ export function setupSwagger(app: INestApplication) {
 
 ![](files/public/swagger-ui.png)
 
-### 👍2-5. Finished!!
+### it's works, but the example and schema is empty....
+
+![](files/public/swagger-ui-empty.png)
+
+### open pokemon.dto.ts
+
+```ts
+import { ApiProperty } from '@nestjs/swagger';
+```
+
+### add on all fields
+
+```ts
+  @ApiProperty({ example: 'super monster', description: 'pokemon name' })
+  @ValidateFromEntity(Pokemon)
+  name: string;
+```
+
+![](files/public/swagger-ui-example.png)
+
+### Creating a new Pokémon 🦖 using Swagger UI
+
+![](files/public/swagger-ui-try.png)
+
+### Use the list API to confirm the Pokémon was created
+
+![](files/public/swagger-ui-create-result.png)
+
+
+### 🦖🦖🦖2-5. Finished!!🦖🦖🦖
 
 ## 2-6. Add basePath and download link of openapi.json
 
@@ -893,22 +922,26 @@ CREATE TABLE users (
 ```ts
 import { ValidateFromEntity } from 'src/app/base/validation/validate-from-entity.decorators';
 import { Users } from 'typeorm-model/Users';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterRequest {
 
+  @ApiProperty({ example: 'example@example.com', description: 'email' })
   @ValidateFromEntity(Users)
   email: string;
 
+  @ApiProperty({ example: 'exampleUsername', description: 'username' })
   @ValidateFromEntity(Users)
   username: string;
   
+  @ApiProperty({ example: 'examplePassword', description: 'password' })
   @ValidateFromEntity(Users)
   password: string;
 
 }
 ```
 
-### create users.service.ts
+### create users.service.ts, PLEASE read comment
 
 ```ts
 import { Injectable } from '@nestjs/common';
