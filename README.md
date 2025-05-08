@@ -1024,7 +1024,18 @@ export class UsersModule {}
 
 ### append UsersModule in imports of app.module.ts
 
-### Creating a new User 🧑 using Swagger UI ()
+### Creating a new User 🧑 using Swagger UI
+
+![](files/public/admin-create.png)
+
+#### ※ A future tutorial will include a step to ensure the user registering owns the provided email address
+
+### Open your DB tool (like DBeaver) and manually approve the registration
+
+![](files/public/admin-create-approve.png)
+
+![](files/public/admin-create-approve2.png)
+
 
 ## download / upload / virus scan / media stream
 
