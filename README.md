@@ -815,6 +815,10 @@ export function setupSwagger(app: INestApplication) {
 
 ![](files/public/swagger-ui.png)
 
+### 👍2-5. Finished!!
+
+## 2.6 Add example and schema
+
 ### it's works, but the example and schema is empty....
 
 ![](files/public/swagger-ui-empty.png)
@@ -844,9 +848,9 @@ import { ApiProperty } from '@nestjs/swagger';
 ![](files/public/swagger-ui-create-result.png)
 
 
-### 🦖🦖🦖2-5. Finished!!🦖🦖🦖
+### 🦖🦖🦖2-6. Finished!!🦖🦖🦖
 
-## 2-6. Add basePath and download link of openapi.json
+## 2-7. Add basePath and download link of openapi.json
 
 ### edit main.ts, add `app.setGlobalPrefix('webapi')`
 
@@ -891,9 +895,9 @@ export function setupSwagger(app: INestApplication) {
 
 ![](files/public/swagger.json.png)
 
-### 👍2-6. Finished!!
+### 👍2-7. Finished!!
 
-## 2-7. add global 
+## 2-8. add global 
 
 ## 3-1. create users table and regist api
 
@@ -1020,7 +1024,7 @@ export class UsersModule {}
 
 ### append UsersModule in imports of app.module.ts
 
-
+### Creating a new User 🧑 using Swagger UI ()
 
 ## download / upload / virus scan / media stream
 
