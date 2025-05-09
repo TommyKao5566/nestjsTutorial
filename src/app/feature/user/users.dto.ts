@@ -17,6 +17,17 @@ export class RegisterRequest {
   password: string;
   
 }
+export class LoginRequest {
+
+  @ApiProperty({ example: 'username', description: 'username' })
+  @ValidateFromEntity(Users)
+  username: string;
+  
+  @ApiProperty({ example: 'password', description: 'password' })
+  @ValidateFromEntity(Users)
+  password: string;
+  
+}
 
 /* class-validator
 class-validator provides many validation decorators, below are some common categories and corresponding decorators:

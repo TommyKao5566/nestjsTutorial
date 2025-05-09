@@ -965,11 +965,6 @@ export class UsersService {
 
   async register(data: Partial<Users>):Promise<Users> {
 
-    // Force apply DB defaults: status = 'inactive', role = 'user'
-    // We'll manually activate the account later directly in the DB
-    delete data.status;
-    delete data.role;
-
     // Securely hash the plain password using bcrypt to prevent storing raw passwords in the database
     const hashedPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
 
@@ -999,6 +994,7 @@ export class UsersController {
 
   // http://localhost:3000/user/register
   @Post('register')
+  @UsePipes(new ValidationPipe({ whitelist: true })) // !!! Removes unexpected fields not defined in the DTO
   async register(@Body() data: RegisterRequest): Promise<Users> {
     return this.usersService.register(data);
   }
@@ -1035,6 +1031,21 @@ export class UsersModule {}
 ![](files/public/admin-create-approve.png)
 
 ![](files/public/admin-create-approve2.png)
+
+### 🧑🧑🧑3-1. Finished!!🧑🧑🧑
+
+## 3-2. login api
+
+### These are the main steps of a login API:
+- `Step 1`: Find the user by username and verify the password.
+
+- `Step 2`: Generate and return a JWT token as the response.
+
+### first of all, create /login api in controller and login function in service
+
+```bash
+npm install @nestjs/jwt @nestjs/passport passport-jwt
+```
 
 
 ## download / upload / virus scan / media stream

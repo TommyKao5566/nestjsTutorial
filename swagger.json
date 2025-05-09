@@ -176,6 +176,30 @@
           "Users"
         ]
       }
+    },
+    "/webapi/users/login": {
+      "post": {
+        "operationId": "UsersController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
     }
   },
   "info": {
@@ -270,6 +294,25 @@
         },
         "required": [
           "email",
+          "username",
+          "password"
+        ]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "username",
+            "description": "username"
+          },
+          "password": {
+            "type": "string",
+            "example": "password",
+            "description": "password"
+          }
+        },
+        "required": [
           "username",
           "password"
         ]
