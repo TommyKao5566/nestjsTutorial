@@ -39,6 +39,11 @@ export class UsersService {
       );
     }
 
+    // if status is not "active"
+    if (user.status !== 'active') {
+      throw new HttpException('Account is not active', 401);
+    }
+
     const payload = { username: user.username, role: user.role };
 
     // generate Access Token（expired in 8 hours）

@@ -1047,6 +1047,43 @@ export class UsersModule {}
 npm install @nestjs/jwt @nestjs/passport passport-jwt
 ```
 
+## 3-3. Add user status check
+
+### In the previous step, we created a login API. However, we did not check if the user's account is active. In this step, we will add a check to ensure that only active users can log in.
+
+### open `src/app/feature/user/users.service.ts` and add the status check in the `login` function.
+
+```typescript
+// src/app/feature/user/users.service.ts
+
+  async login(data: LoginRequest): Promise<{ accessToken: string; refreshToken: string }> {
+
+    const user = await this.usersRepository.findOne({ where: { username: data.username}});
+
+    // user not exist or wrong password
+    if (!user || !(await bcrypt.compare(data.password, user.password))) {
+      throw new HttpException(
+        'ERROR_CODES.UNAUTHORIZED',
+        401,
+      );
+    }
+
+    // if status is not "active"
+    if (user.status !== 'active') {
+      throw new HttpException('Account is not active', 401);
+    }
+
+    const payload = { username: user.username, role: user.role };
+    //...
+  }
+```
+
+### Now, if a user with an inactive status tries to log in, they will receive a 401 Unauthorized error with the message 'Account is not active'. This is a more general message that covers any non-active state, including inactive or banned accounts.
+
+### To test this, you can try to log in with the user you created in step 3-1, which has an 'inactive' status by default.
+
+### 👍3-3. Finished!!
+
 
 ## download / upload / virus scan / media stream
 
