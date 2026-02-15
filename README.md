@@ -1038,14 +1038,174 @@ export class UsersModule {}
 
 ### These are the main steps of a login API:
 - `Step 1`: Find the user by username and verify the password.
-
 - `Step 2`: Generate and return a JWT token as the response.
 
-### first of all, create /login api in controller and login function in service
+### First of all, create /login api in controller and login function in service
 
 ```bash
 npm install @nestjs/jwt @nestjs/passport passport-jwt
 ```
+
+### create `src/app/feature/user/constants.ts`
+This file will store our JWT secret. For production, this should be stored securely outside of the source code (e.g., as an environment variable).
+```ts
+export const jwtConstants = {
+    secret:
+      'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
+  };
+```
+
+### create `src/app/feature/user/jwt.strategy.ts`
+This strategy will be used to validate the JWT tokens on protected endpoints. It extracts the token from the request header and verifies it.
+```ts
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { jwtConstants } from './constants';
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // read JWT from header
+      ignoreExpiration: false, // ignoreExpiration
+      secretOrKey: jwtConstants.secret, // JWT secret
+    });
+  }
+
+  async validate(payload: any) {
+    if (payload.type !== 'access') {
+      throw new HttpException(
+        'ERROR_CODES.UNAUTHORIZED',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return payload;
+  }
+}
+```
+
+### update `src/app/feature/user/users.module.ts`
+We need to import and configure the `JwtModule` to handle JWT creation and verification. We also need to provide the `JwtStrategy`.
+```ts
+import { Module } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Users } from 'typeorm-model/Users';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constants';
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([Users]),
+    JwtModule.register({
+      global: true,
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '8h' },
+    }),
+  ],
+  providers: [UsersService],
+  controllers: [UsersController],
+})
+export class UsersModule {}
+```
+
+### create `login` function in `src/app/feature/user/users.service.ts`
+This function will find the user, validate their password, and generate access and refresh tokens.
+```ts
+// ...
+import { JwtService } from '@nestjs/jwt';
+// ...
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(Users)
+    private readonly usersRepository: Repository<Users>,
+    private jwtService: JwtService, // Inject JwtService
+  ) {}
+
+  // ... (register function)
+
+  async login(data: LoginRequest): Promise<{ accessToken: string; refreshToken: string }> {
+
+    const user = await this.usersRepository.findOne({ where: { username: data.username}});
+
+    // user not exist or wrong password
+    if (!user || !(await bcrypt.compare(data.password, user.password))) {
+      throw new HttpException(
+        'ERROR_CODES.UNAUTHORIZED',
+        401,
+      );
+    }
+
+    // if status is not "active"
+    if (user.status !== 'active') {
+      throw new HttpException('Account is not active', 401);
+    }
+
+    const payload = { username: user.username, role: user.role };
+
+    // generate Access Token（expired in 8 hours）
+    const accessToken = await this.jwtService.signAsync(
+      { ...payload, type: 'access' },
+      {
+        expiresIn: '8h',
+      },
+    );
+
+    // generate Refresh Token（expired in 7 days）
+    const refreshToken = await this.jwtService.signAsync(
+      { ...payload, type: 'refresh' },
+      {
+        expiresIn: '7d',
+      },
+    );
+
+    this.usersRepository.update({ username: data.username},{ refreshToken });
+
+    return { accessToken, refreshToken };
+  }
+}
+```
+
+### create `login` dto in `src/app/feature/user/users.dto.ts`
+```ts
+export class LoginRequest {
+  @ApiProperty({ example: 'exampleUsername', description: 'username' })
+  @ValidateFromEntity(Users)
+  username: string;
+  
+  @ApiProperty({ example: 'examplePassword', description: 'password' })
+  @ValidateFromEntity(Users)
+  password: string;
+}
+```
+
+### create `login` endpoint in `src/app/feature/user/users.controller.ts`
+```ts
+// ...
+import { LoginRequest, RegisterRequest } from './users.dto';
+// ...
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  // ... (register endpoint)
+
+  // http://localhost:3000/users/login
+  @Post('login')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async login(@Body() data: LoginRequest) {
+    return this.usersService.login(data);
+  }
+}
+```
+
+### Now you can test the login API using Swagger UI. Make sure you have an active user in your database. If you use a wrong password, you will get a 401 Unauthorized error.
+
+### 👍3-2. Finished!!
 
 ## 3-3. Add user status check
 
