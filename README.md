@@ -907,7 +907,7 @@ CREATE TABLE users (
   email VARCHAR(255) NOT NULL,
   username VARCHAR(100) NOT NULL,
   password VARCHAR(255) DEFAULT NULL,
-  status VARCHAR(10) DEFAULT 'inactive',
+  status ENUM('active', 'inactive', 'banned', 'deleted') NOT NULL DEFAULT 'inactive',
   role ENUM('admin', 'user', 'guest') NOT NULL DEFAULT 'user',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
