@@ -153,9 +153,9 @@
         ]
       }
     },
-    "/webapi/users/register": {
+    "/webapi/auth/register": {
       "post": {
-        "operationId": "UsersController_register",
+        "operationId": "AuthController_register",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -173,13 +173,13 @@
           }
         },
         "tags": [
-          "Users"
+          "Auth"
         ]
       }
     },
-    "/webapi/users/login": {
+    "/webapi/auth/login": {
       "post": {
-        "operationId": "UsersController_login",
+        "operationId": "AuthController_login",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -197,7 +197,7 @@
           }
         },
         "tags": [
-          "Users"
+          "Auth"
         ]
       }
     }

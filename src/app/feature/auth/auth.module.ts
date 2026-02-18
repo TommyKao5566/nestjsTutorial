@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from 'typeorm-model/Users';
 import { JwtModule } from '@nestjs/jwt';
@@ -21,7 +21,7 @@ import { JwtStrategy } from './jwt.strategy';
   }),
 
 ],
-  providers: [UsersService],
-  controllers: [UsersController],
+  providers: [AuthService],
+  controllers: [AuthController],
 })
-export class UsersModule {}
+export class AuthModule {}

@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from 'typeorm-model/Users';
 import * as bcrypt from 'bcrypt';
-import { LoginRequest, RegisterRequest } from './users.dto';
+import { LoginRequest, RegisterRequest } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
 
 const SALT_ROUNDS = 10;
 
 @Injectable()
-export class UsersService {
+export class AuthService {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,

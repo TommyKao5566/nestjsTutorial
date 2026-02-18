@@ -6,11 +6,11 @@ import { AppService } from './app.service';
 import { typeOrmConfig } from './app/base/typeorm/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PokemonModule } from './app/feature/pokemon/pokemon.module';
-import { UsersModule } from './app/feature/user/users.module';
-import { JwtStrategy } from './app/feature/user/jwt.strategy';
+import { AuthModule } from './app/feature/auth/auth.module';
+import { JwtStrategy } from './app/feature/auth/jwt.strategy';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), PokemonModule, UsersModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), PokemonModule, AuthModule],
   controllers: [AppController],
   providers: [AppService,
     JwtStrategy,
