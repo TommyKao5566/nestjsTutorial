@@ -1245,6 +1245,120 @@ export class UsersController {
 ### 👍3-3. Finished!!
 
 
+## 3-4. Set Up a Global JWT Guard
+In the previous steps, we established the basics of login and authentication. However, to protect multiple API endpoints, we would have to add `@UseGuards(JwtAuthGuard)` above every protected controller or route handler. This approach is not only repetitive but also prone to errors, as one might forget to add the guard, creating a security vulnerability.
+
+A safer and more efficient approach is to **secure all endpoints by default** and then explicitly mark only those that need to be public (e.g., login, register). This is the concept of a "Global Guard."
+
+### Step 1: Create the Public Decorator
+We need a way to mark which endpoints are public. A custom decorator is the cleanest way to achieve this.
+
+Create the file `src/app/base/guard/public.decorator.ts`:
+```typescript
+import { SetMetadata } from '@nestjs/common';
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+```
+- This code defines a `@Public()` decorator.
+- When you use `@Public()` on any route, it attaches metadata (`isPublic: true`) to that route. Our guard will later read this metadata.
+
+### Step 2: Create the JWT Authentication Guard
+This guard will check if a route is marked as `@Public`. If not, it will then proceed with JWT validation.
+
+Create the file `src/app/base/guard/jwt-auth.guard.ts`:
+```typescript
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
+import { lastValueFrom, isObservable } from 'rxjs';
+import { IS_PUBLIC_KEY } from './public.decorator';
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
+  constructor(private reflector: Reflector) {
+    super();
+  }
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    // If the API is public, allow access directly
+    if (isPublic) {
+      return true;
+    }
+
+    // Otherwise, perform JWT validation
+    const result = super.canActivate(context);
+
+    if (isObservable(result)) {
+      return lastValueFrom(result);
+    }
+
+    return result as boolean;
+  }
+}
+```
+- `reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, ...)`: This line checks if the current route (including its controller) has the `isPublic` metadata.
+- If `isPublic` is `true`, `canActivate` returns `true` immediately, allowing the request to pass.
+- Otherwise, it calls `super.canActivate(context)`, which triggers the default `passport-jwt` validation flow (checking the Bearer Token in the header).
+
+### Step 3: Apply the Guard Globally
+The final step is to register `JwtAuthGuard` as a global guard in `app.module.ts`.
+
+Modify `src/app.module.ts`:
+```typescript
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { APP_GUARD } from '@nestjs/core'; // Import APP_GUARD
+import { JwtAuthGuard } from './app/base/guard/jwt-auth.guard'; // Import our Guard
+import { AppService } from './app.service';
+import { typeOrmConfig } from './app/base/typeorm/typeorm.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PokemonModule } from './app/feature/pokemon/pokemon.module';
+import { UsersModule } from './app/feature/user/users.module';
+import { JwtStrategy } from './app/feature/user/jwt.strategy'; // Import JwtStrategy
+
+@Module({
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), PokemonModule, UsersModule],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    JwtStrategy, // Promote JwtStrategy to be global
+    { provide: APP_GUARD, useClass: JwtAuthGuard }, // Set JwtAuthGuard as a global guard
+  ],
+})
+export class AppModule {}
+```
+- We use the special `APP_GUARD` token to provide our `JwtAuthGuard`. NestJS will automatically apply it to every incoming request.
+- We also promote `JwtStrategy` to the `AppModule` to ensure it's available globally.
+
+### How to Use It?
+Now, all API endpoints are protected by JWT authentication by default. If you have a public endpoint, like `login`, you just need to add the `@Public()` decorator above it.
+
+```typescript
+// users.controller.ts
+
+import { Public } from '../base/guard/public.decorator';
+
+// ...
+
+  // any endpoint, without @Public(), will be automatically protected.
+  @Public() // <--- Add this decorator
+  @Post('login')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async login(@Body() data: LoginRequest) {
+    return this.usersService.login(data);
+  }
+
+
+```
+
+### 👍3-4. Finished!!
+
 ## download / upload / virus scan / media stream
 
 ## auth
